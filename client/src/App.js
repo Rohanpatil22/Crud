@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import toast,{ Toaster } from "react-hot-toast";
+import axios from 'axios';
 
 function App() {
 
@@ -25,11 +26,18 @@ function App() {
  
   }
 
-  function addData()
+  const addData=async ()=>
   {
     if(info.name!=="" && info.email!=="" && info.mobno!=="")
     {
-
+      console.log("request send!!!")
+        axios.get("/api/v1/create")
+        .then((res)=>{
+          console.log(res);
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
     }
     else{
       toast.error("Please fill data into the all fields.")
