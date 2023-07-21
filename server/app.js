@@ -1,7 +1,9 @@
 import express, { urlencoded } from "express";
 import cors from 'cors';
 import router from "./routes/index.js";
+
 const app=express();
+
 
 
 app.use(express.json());
