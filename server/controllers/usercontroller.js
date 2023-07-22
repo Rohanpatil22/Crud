@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/userSchema.js";
+import { json } from "express";
 
 
 export const CreateUser=async(req,res)=>{
@@ -39,6 +40,27 @@ export const allUserData=async(req,res)=>{
     res.status(200).json({
         success:true,
         allUser,
+    })
+
+}
+
+export const deleteUser=async(req,res)=>{
+
+   
+    const userId=req.body;
+    console.log(userId);
+
+    const UserToDelete= await User.findOne(userId);
+
+    if(!UserToDelete)
+    {
+        throw Error("User not found.");
+    }
+
+    UserToDelete.remove();
+
+    res.status(200).json({
+        success:true,
     })
 
 }

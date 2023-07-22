@@ -1,11 +1,22 @@
 import React from "react";
-
+import axios from "axios";
 
 function Usertable(props)
 {
     const userdata=props.User;
     console.log(userdata);
 
+    const delete_user=async (id)=>{
+
+        console.log(id);
+        await axios.post("http://localhost:5000/api/v1/delete",id)
+        .then((res)=>{
+            console.log(res)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
    return(
     <>
     {
@@ -42,8 +53,12 @@ function Usertable(props)
                 {item.mobno}
                 </td>
                 <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                    <span className="text-xl"> / </span>
+                    <button className="font-medium text-red-500 dark:text-blue-500 hover:underline" onClick={()=>delete_user(item._id)}>Delete</button>
+
                 </td>
+              
             </tr>
                 ))
            
