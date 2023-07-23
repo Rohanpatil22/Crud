@@ -49,15 +49,9 @@ export const deleteUser=async(req,res)=>{
    
     const userId=req.body;
     console.log(userId);
-
-    const UserToDelete= await User.findOne(userId);
-
-    if(!UserToDelete)
-    {
-        throw Error("User not found.");
-    }
-
-    UserToDelete.remove();
+    const deleteId=userId.id;
+    console.log(deleteId);
+    const UserToDelete= await User.findByIdAndRemove(deleteId);
 
     res.status(200).json({
         success:true,

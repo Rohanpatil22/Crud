@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function Usertable(props)
 {
@@ -9,9 +10,16 @@ function Usertable(props)
     const delete_user=async (id)=>{
 
         console.log(id);
-        await axios.post("http://localhost:5000/api/v1/delete",id)
+        await axios.post(`http://localhost:5000/api/v1/delete`,{id})
         .then((res)=>{
-            console.log(res)
+            console.log(res);
+            if(res.data.success)
+            {
+                toast.success("User removed succesfully.");
+                setTimeout(() => {
+                    window.location.reload();
+                },3000);
+            }
         })
         .catch((err)=>{
             console.log(err);
