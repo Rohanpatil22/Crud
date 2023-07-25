@@ -58,3 +58,16 @@ export const deleteUser=async(req,res)=>{
     })
 
 }
+
+export const updateUser=async(req,res)=>{
+
+   
+    const{name,email,mobno,id}=req.body;
+   
+    const UpdateUserData=await User.findByIdAndUpdate({_id:id},{name,email,mobno});
+    
+    res.status(200).json({
+        success:true,
+        UpdateUserData,
+    })
+}

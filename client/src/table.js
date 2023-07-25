@@ -1,9 +1,12 @@
 import React from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
 
 function Usertable(props)
 {
+    const [editid,seteditid]=useState('');
+    const[newUserData,setuserdata]=useState({name:"",email:"",mobno:"",id:""})
     const userdata=props.User;
     console.log(userdata);
 
@@ -15,7 +18,7 @@ function Usertable(props)
             console.log(res);
             if(res.data.success)
             {
-                toast.success("User removed succesfully.");
+                toast.success("User removed successfully.");
                 setTimeout(() => {
                     window.location.reload();
                 },3000);
@@ -24,6 +27,29 @@ function Usertable(props)
         .catch((err)=>{
             console.log(err);
         })
+    }
+
+    const editRow=(id)=>{
+        console.log(id);
+        seteditid(id._id);
+        setuserdata({name:id.name,email:id.email,mobno:id.mobno,id:id._id});
+    }
+
+    const updateData= async()=>{
+        
+        console.log(newUserData);
+        await axios.post("http://localhost:5000/api/v1/updatedata",newUserData)
+        .then((res)=>{
+            console.log(res);
+           if(res.data.success)
+           {
+             toast.success("Data updated successfully");
+             setTimeout(() => {
+                window.location.reload();
+            },3000);
+           }
+        })
+        seteditid('');
     }
    return(
     <>
@@ -49,7 +75,8 @@ function Usertable(props)
         </thead>
         <tbody>
             {   userdata.map((item)=>(
-                // <tr key={item._id}><td>{item.name}</td><td>{item.email}</td><td>{item.mobno}</td></tr>
+               
+                item._id!==editid ?
                 <tr key={item._id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {item.name}
@@ -61,13 +88,34 @@ function Usertable(props)
                 {item.mobno}
                 </td>
                 <td className="px-6 py-4">
-                    <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                    <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline" onClick={()=>editRow(item)}>Edit</button>
                     <span className="text-xl"> / </span>
                     <button className="font-medium text-red-500 dark:text-blue-500 hover:underline" onClick={()=>delete_user(item._id)}>Delete</button>
 
                 </td>
               
             </tr>
+            :
+            <tr key={item._id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+              
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <input type="text" defaultValue={item.name} onChange={(e)=>{newUserData.name=e.target.value;setuserdata({...newUserData})}}/>
+                </th>
+                <td className="px-6 py-4">
+                <input type="text" defaultValue={item.email} onChange={(e)=>{newUserData.email=e.target.value;setuserdata({...newUserData})}}/>
+                
+                </td>
+                <td className="px-6 py-4">
+                <input maxLength="10" type="text" defaultValue={item.mobno} onChange={(e)=>{newUserData.mobno=e.target.value;setuserdata({...newUserData})}}/>
+               
+                </td>
+                <td className="px-6 py-4">
+                    <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline" onClick={()=>{updateData()}} >Update</button>
+
+                </td>
+              
+            </tr>
+                
                 ))
            
             }
